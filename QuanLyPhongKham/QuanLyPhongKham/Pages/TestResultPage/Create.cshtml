@@ -1,0 +1,395 @@
+﻿@page
+@model QuanLyPhongKham.Pages.TestResultPage.CreateModel
+@{
+    ViewData["Title"] = "Create Test Result";
+}
+
+<div class="row">
+    <div class="col-lg-10 col-xl-8 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="card-title mb-0">Create New Test Result</h4>
+                        <p class="card-description">Enter test result information</p>
+                    </div>
+                    <a asp-page="./Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="mdi mdi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+
+                <!-- Debug Information (Remove in production) -->
+                @if (Model.TestOptions.Count == 0 || Model.UserOptions.Count == 0 || Model.MedicalRecordOptions.Count == 0)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        <h6><i class="mdi mdi-alert me-2"></i>Debug Information:</h6>
+                        <ul class="mb-0">
+                            <li>Test Options: @Model.TestOptions.Count items loaded</li>
+                            <li>User Options: @Model.UserOptions.Count items loaded</li>
+                            <li>Medical Record Options: @Model.MedicalRecordOptions.Count items loaded</li>
+                        </ul>
+                        <small class="text-muted">Check browser console and server logs for more details.</small>
+                    </div>
+                }
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="mdi mdi-alert-circle me-2"></i>
+                        <strong>Please correct the following errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach (var modelState in ViewData.ModelState.Values)
+                            {
+                                @foreach (var error in modelState.Errors)
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            }
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="mdi mdi-alert-circle me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form method="post" id="createForm">
+                    <div class="row">
+                        <!-- Medical Record Selection -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TestResult.RecordId" class="form-label">
+                                <i class="mdi mdi-file-document me-1"></i>Medical Record <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="TestResult.RecordId" class="form-select" required>
+                                <option value="">-- Select Medical Record --</option>
+                                @foreach (var option in Model.MedicalRecordOptions)
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            </select>
+                            @if (!Model.MedicalRecordOptions.Any())
+                            {
+                                <div class="form-text text-warning">
+                                    <i class="mdi mdi-alert me-1"></i>No medical records available. Please check API connection.
+                                </div>
+                            }
+                            <span asp-validation-for="TestResult.RecordId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Test Selection -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TestResult.TestId" class="form-label">
+                                <i class="mdi mdi-test-tube me-1"></i>Test Type <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="TestResult.TestId" class="form-select" required>
+                                <option value="">-- Select Test Type --</option>
+                                @foreach (var option in Model.TestOptions)
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            </select>
+                            @if (!Model.TestOptions.Any())
+                            {
+                                <div class="form-text text-warning">
+                                    <i class="mdi mdi-alert me-1"></i>No test types available. Please check API connection.
+                                </div>
+                            }
+                            <span asp-validation-for="TestResult.TestId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- User Selection -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TestResult.UserId" class="form-label">
+                                <i class="mdi mdi-account me-1"></i>Technician <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="TestResult.UserId" class="form-select" required>
+                                <option value="">-- Select Technician --</option>
+                                @foreach (var option in Model.UserOptions)
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            </select>
+                            @if (!Model.UserOptions.Any())
+                            {
+                                <div class="form-text text-warning">
+                                    <i class="mdi mdi-alert me-1"></i>No technicians available. Please check API connection.
+                                </div>
+                            }
+                            <span asp-validation-for="TestResult.UserId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Test Date -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TestResult.TestDate" class="form-label">
+                                <i class="mdi mdi-calendar me-1"></i>Test Date <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="TestResult.TestDate" type="datetime-local" 
+                                   class="form-control" required />
+                            <span asp-validation-for="TestResult.TestDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Result Detail -->
+                    <div class="mb-4">
+                        <label asp-for="TestResult.ResultDetail" class="form-label">
+                            <i class="mdi mdi-clipboard-text me-1"></i>Result Detail <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="TestResult.ResultDetail" class="form-control" 
+                                  rows="6" maxlength="1000" required 
+                                  placeholder="Enter detailed test results, observations, and findings..."></textarea>
+                        <div class="form-text">
+                            <span id="charCount">0</span>/1000 characters
+                        </div>
+                        <span asp-validation-for="TestResult.ResultDetail" class="text-danger"></span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-page="./Index" class="btn btn-light">
+                            <i class="mdi mdi-arrow-left me-1"></i>Cancel
+                        </a>
+                        <div>
+                            <button type="button" class="btn btn-outline-primary me-2" onclick="resetForm()">
+                                <i class="mdi mdi-refresh me-1"></i>Reset
+                            </button>
+                            <button type="button" class="btn btn-outline-info me-2" onclick="debugApi()">
+                                <i class="mdi mdi-bug me-1"></i>Debug APIs
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="mdi mdi-content-save me-1"></i>Create Test Result
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            // Set default test date to current date/time
+            if (!$('#TestResult_TestDate').val()) {
+                var now = new Date();
+                var dateStr = now.getFullYear() + '-' + 
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getDate()).padStart(2, '0') + 'T' + 
+                    String(now.getHours()).padStart(2, '0') + ':' + 
+                    String(now.getMinutes()).padStart(2, '0');
+                $('#TestResult_TestDate').val(dateStr);
+            }
+
+            // Character count for result detail
+            $('#TestResult_ResultDetail').on('input', function () {
+                var length = $(this).val().length;
+                $('#charCount').text(length);
+                
+                if (length > 900) {
+                    $('#charCount').addClass('text-warning');
+                }
+                if (length > 950) {
+                    $('#charCount').removeClass('text-warning').addClass('text-danger');
+                }
+                if (length <= 900) {
+                    $('#charCount').removeClass('text-warning text-danger');
+                }
+            });
+
+            // Initial character count
+            $('#TestResult_ResultDetail').trigger('input');
+
+            // Form validation enhancement
+            $('#createForm').validate({
+                errorClass: 'text-danger',
+                validClass: 'is-valid',
+                errorElement: 'span',
+                highlight: function(element) {
+                    $(element).addClass('is-invalid').removeClass('is-valid');
+                },
+                unhighlight: function(element) {
+                    $(element).addClass('is-valid').removeClass('is-invalid');
+                }
+            });
+
+            // Submit button loading state
+            $('#createForm').on('submit', function () {
+                $('#submitBtn').prop('disabled', true)
+                    .html('<i class="mdi mdi-loading mdi-spin me-1"></i>Creating...');
+            });
+
+            // Auto-hide alerts
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 10000);
+        });
+
+        function resetForm() {
+            if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+                document.getElementById('createForm').reset();
+                $('.is-invalid, .is-valid').removeClass('is-invalid is-valid');
+                $('#charCount').text('0').removeClass('text-warning text-danger');
+                
+                // Reset test date to current
+                var now = new Date();
+                var dateStr = now.getFullYear() + '-' + 
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getDate()).padStart(2, '0') + 'T' + 
+                    String(now.getHours()).padStart(2, '0') + ':' + 
+                    String(now.getMinutes()).padStart(2, '0');
+                $('#TestResult_TestDate').val(dateStr);
+            }
+        }
+
+        // Debug function to test API endpoints
+        function debugApi() {
+            console.log('=== API Debug Information ===');
+            
+            // Test endpoints
+            const baseUrl = 'https://localhost:7086'; // Update with your API URL
+            const endpoints = [
+                '/api/Test',
+                '/api/User', 
+                '/api/Users',
+                '/api/MedicalRecord',
+                '/api/MedicalRecords',
+                '/api/TestResult/user-names'
+            ];
+
+            endpoints.forEach(endpoint => {
+                fetch(baseUrl + endpoint)
+                    .then(response => {
+                        console.log(`${endpoint}: Status ${response.status}`);
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                    })
+                    .then(data => {
+                        console.log(`${endpoint} data:`, data);
+                    })
+                    .catch(error => {
+                        console.error(`${endpoint} error:`, error);
+                    });
+            });
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .card-title {
+            color: #6c7293;
+            font-weight: 500;
+        }
+
+        .card-description {
+            color: #a7a7a7;
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            color: #6c7293;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .is-valid {
+            border-color: #28a745;
+        }
+
+        .text-danger {
+            font-size: 0.875rem;
+        }
+
+        .form-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .btn {
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-outline-info {
+            color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-light {
+            background-color: #f8f9fa;
+            border-color: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 0.375rem;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .mdi-spin {
+            animation: spin 1s linear infinite;
+        }
+
+    </style>
+}

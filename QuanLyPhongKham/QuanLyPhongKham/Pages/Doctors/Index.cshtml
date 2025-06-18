@@ -1,0 +1,167 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Doctors.IndexModel
+@{
+    ViewData["Title"] = "Manage Doctors";
+}
+
+<h1>Doctors</h1>
+
+<form method="get" class="mb-3">
+    <input type="text" name="SearchTerm" value="@Model.SearchTerm" placeholder="Search by name..." class="form-control mb-2" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<button class="btn btn-success mb-3" onclick="loadCreateForm()">Add Doctor</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Gender</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model.Doctors)
+        {
+            <tr>
+                <td>@doctor.FullName</td>
+                <td>@doctor.Phone</td>
+                <td>@doctor.Email</td>
+                <td>@(doctor.DOB?.ToString("yyyy-MM-dd"))</td>
+                <th>@doctor.Gender</th>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick="loadEditForm(@doctor.AccountId)">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="loadDeleteForm(@doctor.AccountId)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="doctorModal" tabindex="-1" aria-labelledby="doctorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="doctorModalContent"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function loadCreateForm() {
+            fetch('/Doctors/Create')
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('doctorModalContent').innerHTML = html;
+                    var modal = new bootstrap.Modal(document.getElementById('doctorModal'));
+                    modal.show();
+
+                    bindCreateFormSubmit();
+                });
+        }
+
+        function loadEditForm(id) {
+            fetch(`/Doctors/Edit?id=${id}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('doctorModalContent').innerHTML = html;
+                    var modal = new bootstrap.Modal(document.getElementById('doctorModal'));
+                    modal.show();
+
+                    bindEditFormSubmit();
+                });
+        }
+
+        function loadDeleteForm(id) {
+            fetch(`/Doctors/Delete?id=${id}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('doctorModalContent').innerHTML = html;
+                    var modal = new bootstrap.Modal(document.getElementById('doctorModal'));
+                    modal.show();
+
+                    bindDeleteFormSubmit();
+                });
+        }
+
+        function bindCreateFormSubmit() {
+            const form = document.getElementById('doctorCreateForm');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                fetch('/Doctors/Create', {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                .then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                        return;
+                    }
+                    return res.text();
+                })
+                .then(html => {
+                    if (html) {
+                        document.getElementById('doctorModalContent').innerHTML = html;
+                        bindCreateFormSubmit();
+                    }
+                });
+            });
+        }
+
+        function bindEditFormSubmit() {
+            const form = document.getElementById('doctorEditForm');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                fetch('/Doctors/Edit', {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                .then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                        return;
+                    }
+                    return res.text();
+                })
+                .then(html => {
+                    if (html) {
+                        document.getElementById('doctorModalContent').innerHTML = html;
+                        bindEditFormSubmit();
+                    }
+                });
+            });
+        }
+
+        function bindDeleteFormSubmit() {
+            const form = document.getElementById('doctorDeleteForm');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                fetch('/Doctors/Delete', {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                .then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                        return;
+                    }
+                    return res.text();
+                })
+                .then(html => {
+                    if (html) {
+                        document.getElementById('doctorModalContent').innerHTML = html;
+                        bindDeleteFormSubmit();
+                    }
+                });
+            });
+        }
+    </script>
+}

@@ -1,0 +1,180 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Patient.EditPatientModel
+@{
+    ViewData["Title"] = "Sửa Thông Tin Bệnh Nhân";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+
+    .validation-error {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .button-group {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 25px;
+        margin: 0 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+</style>
+
+<div class="container">
+    <h2>Sửa Thông Tin Bệnh Nhân</h2>
+
+    @if (!ModelState.IsValid)
+    {
+        <div class="error-message">
+            Vui lòng sửa các lỗi sau:
+            <ul>
+                @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="PatientViewModel.PatientId" />
+
+        <div class="form-group">
+            <label asp-for="PatientViewModel.FullName">Họ Tên</label>
+            <input asp-for="PatientViewModel.FullName" />
+            <span asp-validation-for="PatientViewModel.FullName" class="validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PatientViewModel.DOB">Ngày Sinh</label>
+            <input asp-for="PatientViewModel.DOB" type="date" />
+            <span asp-validation-for="PatientViewModel.DOB" class="validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PatientViewModel.Gender">Giới Tính</label>
+            <select asp-for="PatientViewModel.Gender">
+                <option value="">-- Chọn giới tính --</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+            </select>
+            <span asp-validation-for="PatientViewModel.Gender" class="validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PatientViewModel.Phone">Số Điện Thoại</label>
+            <input asp-for="PatientViewModel.Phone" />
+            <span asp-validation-for="PatientViewModel.Phone" class="validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PatientViewModel.Email">Email</label>
+            <input asp-for="PatientViewModel.Email" type="email" />
+            <span asp-validation-for="PatientViewModel.Email" class="validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PatientViewModel.Address">Địa Chỉ</label>
+            <input asp-for="PatientViewModel.Address" />
+            <span asp-validation-for="PatientViewModel.Address" class="validation-error"></span>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Cập Nhật</button>
+            <a asp-page="/Patient/PatientList" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

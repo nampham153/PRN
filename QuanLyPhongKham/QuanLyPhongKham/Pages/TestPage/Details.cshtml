@@ -1,0 +1,40 @@
+﻿@page
+@model Frontendui.Pages.TestPage.DetailsModel
+
+@{
+    ViewData["Title"] = "Test Details";
+}
+
+<h1>Test Details</h1>
+
+<div>
+    <h4>Test Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Test.TestId)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Test.TestId)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Test.TestName)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Test.TestName)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Test.Description)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Test.Description)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Test.TestId" class="btn btn-primary">Edit</a>
+    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+</div>

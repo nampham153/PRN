@@ -1,0 +1,234 @@
+﻿@page
+@model QuanLyPhongKham.Pages.TestResultPage.EditModel
+@{
+    ViewData["Title"] = "Edit Test Result";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Test Result</h3>
+                    <div class="card-tools">
+                        <a asp-page="./Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                        <a asp-page="./Details" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="TestResult.RecordId" class="form-label">Medical Record</label>
+                                    <select asp-for="TestResult.RecordId" class="form-control select2" asp-items="Model.MedicalRecords">
+                                        <option value="">-- Select Medical Record --</option>
+                                    </select>
+                                    <span asp-validation-for="TestResult.RecordId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="TestResult.TestId" class="form-label">Test</label>
+                                    <select asp-for="TestResult.TestId" class="form-control select2" asp-items="Model.Tests">
+                                        <option value="">-- Select Test --</option>
+                                    </select>
+                                    <span asp-validation-for="TestResult.TestId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="TestResult.UserId" class="form-label">Technician</label>
+                                    <select asp-for="TestResult.UserId" class="form-control select2" asp-items="Model.Users">
+                                        <option value="">-- Select Technician --</option>
+                                    </select>
+                                    <span asp-validation-for="TestResult.UserId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="TestResult.TestDate" class="form-label">Test Date</label>
+                                    <input asp-for="TestResult.TestDate" class="form-control" type="datetime-local" />
+                                    <span asp-validation-for="TestResult.TestDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="TestResult.ResultDetail" class="form-label">Result Detail</label>
+                            <textarea asp-for="TestResult.ResultDetail" class="form-control" rows="6"
+                                      placeholder="Enter detailed test results..."></textarea>
+                            <span asp-validation-for="TestResult.ResultDetail" class="text-danger"></span>
+                            <small class="form-text text-muted">Maximum 1000 characters</small>
+                        </div>
+
+                        <!-- Display current information -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle"></i> Current Information:</h6>
+                                    <p><strong>Test:</strong> @Model.TestResult.TestName</p>
+                                    <p><strong>Patient:</strong> @Model.TestResult.PatientName</p>
+                                    <p><strong>Medical Record Date:</strong> @Model.TestResult.MedicalRecordDate</p>
+                                    <p><strong>Diagnosis:</strong> @Model.TestResult.Diagnosis</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Update Test Result
+                            </button>
+                            <a asp-page="./Index" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+
+            // Character counter for result detail
+            $('#TestResult_ResultDetail').on('input', function () {
+                var length = $(this).val().length;
+                var maxLength = 1000;
+                var remaining = maxLength - length;
+
+                if (!$('#char-counter').length) {
+                    $(this).after('<small id="char-counter" class="form-text text-muted"></small>');
+                }
+
+                $('#char-counter').text(remaining + ' characters remaining');
+
+                if (remaining < 0) {
+                    $('#char-counter').removeClass('text-muted').addClass('text-danger');
+                } else {
+                    $('#char-counter').removeClass('text-danger').addClass('text-muted');
+                }
+            });
+
+            // Trigger initial character count
+            $('#TestResult_ResultDetail').trigger('input');
+
+            // Format datetime-local input
+            var testDate = '@Model.TestResult.TestDate.ToString("yyyy-MM-ddTHH:mm")';
+            if (testDate && !$('#TestResult_TestDate').val()) {
+                $('#TestResult_TestDate').val(testDate);
+            }
+        });
+
+        // Form validation
+        $('form').on('submit', function (e) {
+            var isValid = true;
+            var errors = [];
+
+            // Validate required fields
+            if (!$('#TestResult_RecordId').val()) {
+                errors.push('Medical Record is required');
+                isValid = false;
+            }
+            if (!$('#TestResult_TestId').val()) {
+                errors.push('Test is required');
+                isValid = false;
+            }
+            if (!$('#TestResult_UserId').val()) {
+                errors.push('Technician is required');
+                isValid = false;
+            }
+            if (!$('#TestResult_ResultDetail').val().trim()) {
+                errors.push('Result Detail is required');
+                isValid = false;
+            }
+            if (!$('#TestResult_TestDate').val()) {
+                errors.push('Test Date is required');
+                isValid = false;
+            }
+
+            // Validate result detail length
+            if ($('#TestResult_ResultDetail').val().length > 1000) {
+                errors.push('Result Detail cannot exceed 1000 characters');
+                isValid = false;
+            }
+
+            // Validate test date is not in future
+            var testDate = new Date($('#TestResult_TestDate').val());
+            var now = new Date();
+            if (testDate > now) {
+                errors.push('Test Date cannot be in the future');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fix the following errors:\n\n' + errors.join('\n'));
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .card-header {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 38px;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+            .select2-container .select2-selection--single .select2-selection__rendered {
+                line-height: 36px;
+                padding-left: 12px;
+            }
+
+            .select2-container .select2-selection--single .select2-selection__arrow {
+                height: 36px;
+            }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+}

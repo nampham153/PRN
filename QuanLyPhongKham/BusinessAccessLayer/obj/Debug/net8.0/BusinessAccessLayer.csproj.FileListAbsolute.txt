@@ -1,0 +1,16 @@
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\bin\Debug\net8.0\BusinessAccessLayer.deps.json
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\bin\Debug\net8.0\BusinessAccessLayer.dll
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\bin\Debug\net8.0\BusinessAccessLayer.pdb
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\bin\Debug\net8.0\DataAccessLayer.dll
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\bin\Debug\net8.0\DataAccessLayer.pdb
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.csproj.AssemblyReference.cache
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.AssemblyInfoInputs.cache
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.AssemblyInfo.cs
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.csproj.CoreCompileInputs.cache
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.sourcelink.json
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\Business.395A7FC9.Up2Date
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.dll
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\refint\BusinessAccessLayer.dll
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\BusinessAccessLayer.pdb
+E:\clone5\PRN232_Quan-ly-phong-kham\QuanLyPhongKham\BusinessAccessLayer\obj\Debug\net8.0\ref\BusinessAccessLayer.dll

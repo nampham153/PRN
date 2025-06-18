@@ -1,0 +1,22 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Doctors.DeleteModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Delete Doctor</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+    <form method="post" id="doctorDeleteForm">
+        <input type="hidden" asp-for="Doctor.AccountId" />
+        <p>Are you sure you want to delete doctor <strong>@Model.Doctor.FullName</strong>?</p>
+
+        <div>
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+</div>

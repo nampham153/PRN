@@ -1,0 +1,62 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Doctors.EditModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit Doctor</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+    <form method="post" id="doctorEditForm">
+        <input type="hidden" asp-for="Doctor.AccountId" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Doctor.FullName" class="form-label"></label>
+            <input asp-for="Doctor.FullName" class="form-control" />
+            <span asp-validation-for="Doctor.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Doctor.Email" class="form-label"></label>
+            <input asp-for="Doctor.Email" class="form-control" />
+            <span asp-validation-for="Doctor.Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Doctor.Phone" class="form-label"></label>
+            <input asp-for="Doctor.Phone" class="form-control" />
+            <span asp-validation-for="Doctor.Phone" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Doctor.DOB" class="form-label"></label>
+            <input asp-for="Doctor.DOB" type="date" class="form-control" />
+            <span asp-validation-for="Doctor.DOB" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Doctor.Gender" class="form-label"></label>
+            <select asp-for="Doctor.Gender" class="form-select">
+                <option value="">Select Gender</option>
+                <option value="Male" selected="@("Male" == Model.Doctor.Gender)">Male</option>
+                <option value="Female" selected="@("Female" == Model.Doctor.Gender)">Female</option>
+                <option value="Other" selected="@("Other" == Model.Doctor.Gender)">Other</option>
+            </select>
+            <span asp-validation-for="Doctor.Gender" class="text-danger"></span>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

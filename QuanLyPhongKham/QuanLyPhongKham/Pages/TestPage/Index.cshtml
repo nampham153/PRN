@@ -1,0 +1,428 @@
+﻿@page
+@model Frontendui.Pages.TestPage.IndexModel
+@{
+    ViewData["Title"] = "Test Management";
+}
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="card-title mb-0">Test Management</h4>
+                        <p class="card-description">Manage and organize your tests</p>
+                    </div>
+                    <a asp-page="Create" class="btn btn-primary btn-sm">
+                        <i class="mdi mdi-plus"></i> Create New Test
+                    </a>
+                </div>
+
+                <!-- Search and Filter Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Search & Filter</h6>
+                                <form method="get">
+                                    <div class="row">
+                                        <!-- Search Term -->
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Search:</label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm"
+                                                   id="searchTerm"
+                                                   name="searchTerm"
+                                                   value="@Model.SearchFilter.SearchTerm"
+                                                   placeholder="Enter test name or description..." />
+                                        </div>
+
+                                        <!-- Sort By -->
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">Sort By:</label>
+                                            <select class="form-select form-select-sm" id="sortBy" name="sortBy">
+                                                <option value="TestId" selected="@(Model.SearchFilter.SortBy == "TestId")">Test ID</option>
+                                                <option value="TestName" selected="@(Model.SearchFilter.SortBy == "TestName")">Test Name</option>
+                                                <option value="Description" selected="@(Model.SearchFilter.SortBy == "Description")">Description</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Sort Order -->
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">Order:</label>
+                                            <select class="form-select form-select-sm" id="sortDescending" name="sortDescending">
+                                                <option value="false" selected="@(!Model.SearchFilter.SortDescending)">Ascending</option>
+                                                <option value="true" selected="@(Model.SearchFilter.SortDescending)">Descending</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Page Size -->
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">Per page:</label>
+                                            <select class="form-select form-select-sm" id="pageSize" name="pageSize">
+                                                <option value="5" selected="@(Model.SearchFilter.PageSize == 5)">5</option>
+                                                <option value="10" selected="@(Model.SearchFilter.PageSize == 10)">10</option>
+                                                <option value="20" selected="@(Model.SearchFilter.PageSize == 20)">20</option>
+                                                <option value="50" selected="@(Model.SearchFilter.PageSize == 50)">50</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Search Buttons -->
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">&nbsp;</label>
+                                            <div class="d-flex gap-2">
+                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                    <i class="mdi mdi-magnify"></i> Search
+                                                </button>
+                                                <a href="@Url.Page("./Index")" class="btn btn-outline-secondary btn-sm">
+                                                    <i class="mdi mdi-close"></i> Clear
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden field for page number -->
+                                    <input type="hidden" name="pageNumber" value="@Model.SearchFilter.PageNumber" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Summary -->
+                @if (Model.PaginatedResult != null)
+                {
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="badge badge-info">
+                                @Model.PaginatedResult.TotalRecords test(s) found
+                                @if (!string.IsNullOrEmpty(Model.SearchFilter.SearchTerm))
+                                {
+                                    <span> for "@Model.SearchFilter.SearchTerm"</span>
+                                }
+                            </span>
+                            <small class="text-muted ms-2">
+                                Showing @((Model.PaginatedResult.PageNumber - 1) * Model.PaginatedResult.PageSize + 1)
+                                to @(Math.Min(Model.PaginatedResult.PageNumber * Model.PaginatedResult.PageSize, Model.PaginatedResult.TotalRecords))
+                                of @Model.PaginatedResult.TotalRecords results
+                            </small>
+                        </div>
+                    </div>
+                }
+
+                <!-- Results Table -->
+                @if (Model.PaginatedResult != null && Model.PaginatedResult.Data.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = "TestId",
+                                            sortDescending = Model.SearchFilter.SortBy == "TestId" ? !Model.SearchFilter.SortDescending : false,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = 1
+                                        })" class="text-decoration-none">
+                                            Test ID
+                                            @if (Model.SearchFilter.SortBy == "TestId")
+                                            {
+                                                <i class="mdi mdi-sort-@(Model.SearchFilter.SortDescending ? "descending" : "ascending")"></i>
+                                            }
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = "TestName",
+                                            sortDescending = Model.SearchFilter.SortBy == "TestName" ? !Model.SearchFilter.SortDescending : false,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = 1
+                                        })" class="text-decoration-none">
+                                            Test Name
+                                            @if (Model.SearchFilter.SortBy == "TestName")
+                                            {
+                                                <i class="mdi mdi-sort-@(Model.SearchFilter.SortDescending ? "descending" : "ascending")"></i>
+                                            }
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = "Description",
+                                            sortDescending = Model.SearchFilter.SortBy == "Description" ? !Model.SearchFilter.SortDescending : false,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = 1
+                                        })" class="text-decoration-none">
+                                            Description
+                                            @if (Model.SearchFilter.SortBy == "Description")
+                                            {
+                                                <i class="mdi mdi-sort-@(Model.SearchFilter.SortDescending ? "descending" : "ascending")"></i>
+                                            }
+                                        </a>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PaginatedResult.Data)
+                                {
+                                    <tr>
+                                        <td>
+                                            <label class="badge badge-success">@Html.DisplayFor(modelItem => item.TestId)</label>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0">@Html.DisplayFor(modelItem => item.TestName)</h6>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var description = item.Description;
+                                                var maxLength = 100;
+                                                if (description?.Length > maxLength)
+                                                {
+                                                    description = description.Substring(0, maxLength) + "...";
+                                                }
+                                            }
+                                            <span class="text-muted" title="@item.Description">@description</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a asp-page="./Details" asp-route-id="@item.TestId"
+                                                   class="btn btn-outline-info btn-sm btn-icon-text" title="View Details">
+                                                    <i class="mdi mdi-eye"></i>
+                                                    View
+                                                </a>
+                                                <a asp-page="./Edit" asp-route-id="@item.TestId"
+                                                   class="btn btn-outline-warning btn-sm btn-icon-text" title="Edit">
+                                                    <i class="mdi mdi-pencil"></i>
+                                                    Edit
+                                                </a>
+                                                <a asp-page="./Delete" asp-route-id="@item.TestId"
+                                                   class="btn btn-outline-danger btn-sm btn-icon-text" title="Delete">
+                                                    <i class="mdi mdi-delete"></i>
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    @if (Model.PaginatedResult.TotalPages > 1)
+                    {
+                        <nav aria-label="Test pagination" class="mt-4">
+                            <ul class="pagination pagination-sm justify-content-center">
+                                <!-- Previous Button -->
+                                <li class="page-item @(!Model.PaginatedResult.HasPreviousPage ? "disabled" : "")">
+                                    @if (Model.PaginatedResult.HasPreviousPage)
+                                    {
+                                        <a class="page-link" href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = Model.SearchFilter.SortBy,
+                                            sortDescending = Model.SearchFilter.SortDescending,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = Model.PaginatedResult.PageNumber - 1
+                                        })">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="page-link">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </span>
+                                    }
+                                </li>
+
+                                <!-- Page Numbers -->
+                                @{
+                                    var startPage = Math.Max(1, Model.PaginatedResult.PageNumber - 2);
+                                    var endPage = Math.Min(Model.PaginatedResult.TotalPages, Model.PaginatedResult.PageNumber + 2);
+                                }
+
+                                @if (startPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = Model.SearchFilter.SortBy,
+                                            sortDescending = Model.SearchFilter.SortDescending,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = 1
+                                        })">1</a>
+                                    </li>
+                                    @if (startPage > 2)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+                                }
+
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == Model.PaginatedResult.PageNumber ? "active" : "")">
+                                        @if (i == Model.PaginatedResult.PageNumber)
+                                        {
+                                            <span class="page-link">@i</span>
+                                        }
+                                        else
+                                        {
+                                            <a class="page-link" href="@Url.Page("./Index", new {
+                                                searchTerm = Model.SearchFilter.SearchTerm,
+                                                sortBy = Model.SearchFilter.SortBy,
+                                                sortDescending = Model.SearchFilter.SortDescending,
+                                                pageSize = Model.SearchFilter.PageSize,
+                                                pageNumber = i
+                                            })">@i</a>
+                                        }
+                                    </li>
+                                }
+
+                                @if (endPage < Model.PaginatedResult.TotalPages)
+                                {
+                                    @if (endPage < Model.PaginatedResult.TotalPages - 1)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = Model.SearchFilter.SortBy,
+                                            sortDescending = Model.SearchFilter.SortDescending,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = Model.PaginatedResult.TotalPages
+                                        })">@Model.PaginatedResult.TotalPages</a>
+                                    </li>
+                                }
+
+                                <!-- Next Button -->
+                                <li class="page-item @(!Model.PaginatedResult.HasNextPage ? "disabled" : "")">
+                                    @if (Model.PaginatedResult.HasNextPage)
+                                    {
+                                        <a class="page-link" href="@Url.Page("./Index", new {
+                                            searchTerm = Model.SearchFilter.SearchTerm,
+                                            sortBy = Model.SearchFilter.SortBy,
+                                            sortDescending = Model.SearchFilter.SortDescending,
+                                            pageSize = Model.SearchFilter.PageSize,
+                                            pageNumber = Model.PaginatedResult.PageNumber + 1
+                                        })">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="page-link">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </span>
+                                    }
+                                </li>
+                            </ul>
+                        </nav>
+                    }
+                }
+                else
+                {
+                    <!-- No Results Message -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="mdi mdi-file-search-outline display-1 text-muted mb-4"></i>
+                                        <h4 class="mb-3">No tests found</h4>
+                                        @if (!string.IsNullOrEmpty(Model.SearchFilter.SearchTerm))
+                                        {
+                                            <p class="text-muted mb-4">
+                                                No tests found matching "<strong>@Model.SearchFilter.SearchTerm</strong>".
+                                                <br>Try adjusting your search criteria or <a href="@Url.Page("./Index")" class="text-primary">view all tests</a>.
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted mb-4">There are currently no tests in the system.</p>
+                                        }
+                                        <a asp-page="Create" class="btn btn-primary">
+                                            <i class="mdi mdi-plus"></i> Create Your First Test
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card-title {
+            color: #6c7293;
+            font-weight: 500;
+        }
+
+        .card-description {
+            color: #a7a7a7;
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        .badge-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .table th a {
+            color: #6c7293;
+            font-weight: 500;
+        }
+
+            .table th a:hover {
+                color: #007bff;
+            }
+
+        .btn-group .btn {
+            margin-right: 4px;
+        }
+
+            .btn-group .btn:last-child {
+                margin-right: 0;
+            }
+
+        .btn-icon-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .empty-state {
+            padding: 2rem 0;
+        }
+
+        .form-label {
+            color: #6c7293;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .pagination-sm .page-link {
+            padding: 0.375rem 0.75rem;
+        }
+
+        .badge-success {
+            background-color: #84ba3f;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+    </style>
+}

@@ -1,0 +1,44 @@
+﻿@page
+@model Frontendui.Pages.TestPage.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete Test";
+}
+
+<h1>Delete Test</h1>
+
+<h3>Are you sure you want to delete this test?</h3>
+<div>
+    <h4>Test Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Test.TestId)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Test.TestId)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Test.TestName)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Test.TestName)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Test.Description)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Test.Description)
+        </dd>
+    </dl>
+
+    <form method="post">
+        <input type="hidden" asp-for="Test.TestId" />
+        <div class="form-group">
+            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this test?')" />
+            <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+</div>

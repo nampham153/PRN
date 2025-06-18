@@ -1,0 +1,13 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Patient.DeletePatientModel
+@{
+    ViewData["Title"] = "Xóa Bệnh Nhân";
+}
+
+<h2>Xóa Bệnh Nhân</h2>
+<p>Bạn có chắc muốn xóa bệnh nhân: @Model.PatientViewModel.FullName?</p>
+<form method="post">
+    <input type="hidden" asp-for="PatientViewModel.PatientId" />
+    <button type="submit">Xóa</button>
+    <a asp-page="/PatientList">Hủy</a>
+</form>

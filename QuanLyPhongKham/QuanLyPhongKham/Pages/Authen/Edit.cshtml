@@ -1,0 +1,51 @@
+﻿@page "{id:int}"
+@model QuanLyPhongKham.Pages.Authen.EditModel
+
+<h2>Chỉnh sửa tài khoản</h2>
+
+<form method="post" novalidate>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Account.AccountId" />
+
+    <div class="form-group mb-3">
+        <label asp-for="Account.Username" class="form-label"></label>
+        <input asp-for="Account.Username" class="form-control" />
+        <span asp-validation-for="Account.Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Account.RoleId" class="form-label"></label>
+        <select asp-for="Account.RoleId" class="form-select" asp-items="Model.RoleSelectList">
+            <option value="">-- Chọn vai trò --</option>
+        </select>
+        <span asp-validation-for="Account.RoleId" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Account.FullName" class="form-label"></label>
+        <input asp-for="Account.FullName" class="form-control" />
+        <span asp-validation-for="Account.FullName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Account.Password" class="form-label">Mật khẩu (để trống nếu không đổi)</label>
+        <input asp-for="Account.Password" type="password" class="form-control" />
+        <span asp-validation-for="Account.Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Account.Status" class="form-label"></label>
+        <select asp-for="Account.Status" class="form-select">
+            <option value="true">Hoạt động</option>
+            <option value="false">Vô hiệu hóa</option>
+        </select>
+        <span asp-validation-for="Account.Status" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-page="./Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

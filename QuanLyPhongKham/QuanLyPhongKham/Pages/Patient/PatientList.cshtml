@@ -1,0 +1,280 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Patient.PatientListModel
+@{
+    ViewData["Title"] = "Danh Sách Bệnh Nhân";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .search-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .search-row {
+        display: flex;
+        gap: 15px;
+        align-items: end;
+        margin-bottom: 15px;
+    }
+
+    .search-unified {
+        flex: 1;
+    }
+
+        .search-unified label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .search-unified input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+            .search-unified input:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+
+    .filter-row {
+        display: flex;
+        gap: 15px;
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        min-width: 150px;
+    }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .filter-group select,
+        .filter-group input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+    .search-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+        .search-btn:hover {
+            background: #0056b3;
+        }
+
+    .patient-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+    }
+
+        .patient-table th {
+            background: #007bff;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .patient-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .patient-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .patient-table tbody tr:hover {
+            background: #e3f2fd;
+        }
+
+    .action-links a {
+        display: inline-block;
+        padding: 5px 10px;
+        margin-right: 5px;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .edit-link {
+        background: #28a745;
+        color: white;
+    }
+
+        .edit-link:hover {
+            background: #218838;
+        }
+
+    .delete-link {
+        background: #dc3545;
+        color: white;
+    }
+
+        .delete-link:hover {
+            background: #c82333;
+        }
+
+    .add-patient {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+        .add-patient:hover {
+            background: #0056b3;
+        }
+
+    /* Responsive - Cú pháp đúng cho Razor */
+    @@media (max-width: 768px) {
+        .search-row,
+        .filter-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-group {
+            min-width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .patient-table {
+            font-size: 12px;
+        }
+
+            .patient-table th,
+            .patient-table td {
+                padding: 8px 4px;
+            }
+    }
+</style>
+
+<div class="container">
+    <h2>Danh Sách Bệnh Nhân</h2>
+
+    <!-- Form search và filter -->
+    <div class="search-section">
+        <form method="get">
+            <div class="search-row">
+                <div class="search-unified">
+                    <label>Tìm kiếm (họ tên, SĐT, email, địa chỉ):</label>
+                    <input type="text" name="searchFullName" value="@Model.SearchFullName" placeholder="Nhập từ khóa tìm kiếm..." />
+                </div>
+                <button type="submit" class="search-btn">Tìm kiếm</button>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Giới tính:</label>
+                    <select name="genderFilter">
+                        <option value="">Tất cả</option>
+                        <option value="Nam" selected="@(Model.GenderFilter == "Nam")">Nam</option>
+                        <option value="Nữ" selected="@(Model.GenderFilter == "Nữ")">Nữ</option>
+                        <option value="Khác" selected="@(Model.GenderFilter == "Khác")">Khác</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Ngày sinh từ:</label>
+                    <input type="date" name="dobFrom" value="@Model.DOBFrom?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="filter-group">
+                    <label>Ngày sinh đến:</label>
+                    <input type="date" name="dobTo" value="@Model.DOBTo?.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bảng danh sách bệnh nhân -->
+    <table class="patient-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Họ Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Giới Tính</th>
+                <th>Số Điện Thoại</th>
+                <th>Email</th>
+                <th>Địa Chỉ</th>
+                <th>Số Hồ Sơ Y Tế</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model.Patients)
+            {
+                <tr>
+                    <td>@patient.PatientId</td>
+                    <td>@patient.FullName</td>
+                    <td>@patient.DOB.ToShortDateString()</td>
+                    <td>@patient.Gender</td>
+                    <td>@patient.Phone</td>
+                    <td>@patient.Email</td>
+                    <td>@patient.Address</td>
+                    <td>@patient.MedicalRecordCount</td>
+                    <td class="action-links">
+                        <a href="/Patient/EditPatient?id=@patient.PatientId" class="edit-link">Sửa</a>
+                        <a href="/Patient/DeletePatient?id=@patient.PatientId" class="delete-link">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="/Patient/CreatePatient" class="add-patient">Thêm Bệnh Nhân</a>
+</div>

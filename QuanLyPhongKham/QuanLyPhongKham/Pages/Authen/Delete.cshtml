@@ -1,0 +1,12 @@
+﻿@page "{id:int}"
+@model QuanLyPhongKham.Pages.Authen.DeleteModel
+
+<h2>Xóa tài khoản</h2>
+
+<h4>Bạn có chắc muốn xóa tài khoản: <strong>@Model.Account.Username</strong> không?</h4>
+
+<form method="post">
+    <input type="hidden" asp-for="Account.AccountId" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-page="./Index" class="btn btn-secondary">Hủy</a>
+</form>

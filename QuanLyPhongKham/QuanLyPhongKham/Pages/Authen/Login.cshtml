@@ -1,0 +1,24 @@
+﻿@page
+@model QuanLyPhongKham.Pages.Authen.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<form method="post">
+    <div>
+        <label asp-for="LoginRequest.Username"></label>
+        <input asp-for="LoginRequest.Username" />
+    </div>
+    <div>
+        <label asp-for="LoginRequest.Password"></label>
+        <input asp-for="LoginRequest.Password" type="password" />
+    </div>
+    <button type="submit">Login</button>
+
+    @if (Model.ErrorMessage != null)
+    {
+        <p style="color:red">@Model.ErrorMessage</p>
+    }
+</form>
